@@ -1,0 +1,3 @@
+#define WIFI_AP "MyWiFiAP"
+#define WIFI_PSK "WLANPASSWORD"
+#define HTTP_URL "https://my-server/file.data"
