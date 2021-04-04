@@ -1,3 +1,5 @@
 #define WIFI_AP "MyWiFiAP"
 #define WIFI_PSK "WLANPASSWORD"
+#define WIFI_HOSTNAME "dhcp-hostname"
 #define HTTP_URL "https://my-server/file.data"
+#define TIMEZONE "Europe/Berlin"
