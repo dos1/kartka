@@ -3,6 +3,7 @@
 #include <rom/rtc.h>
 #include <WiFiMulti.h>
 #include <ezTime.h>
+#include <assert.h>
 
 #include "pgm.h"
 #include "download.h"
@@ -87,6 +88,7 @@ void setup() {
   WiFi.setHostname(WIFI_HOSTNAME);
   const char* aps[] = {WIFI_AP};
   const char* psks[] = {WIFI_PSK};
+  static_assert(sizeof(aps) == sizeof(psks), "Invalid access point configuration");
   for (int i=0; i<sizeof(aps)/sizeof(aps[0]); i++) {
     wifiMulti.addAP(aps[i], psks[i]);
   }
