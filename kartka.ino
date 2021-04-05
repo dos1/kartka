@@ -96,6 +96,8 @@ void setup() {
 
   if (rtc_get_reset_reason(0) == DEEPSLEEP_RESET && !recovery) {
     quiet = true;
+    Serial.println("Starting in quiet mode.");
+    Serial.println();
   }
 
   double voltage = display.readBattery();
