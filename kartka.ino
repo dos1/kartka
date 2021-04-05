@@ -1,5 +1,6 @@
 #include <Inkplate.h>
 #include <driver/rtc_io.h>
+#include <rom/rtc.h>
 #include <WiFiMulti.h>
 #include <ezTime.h>
 
@@ -15,6 +16,9 @@
 Inkplate display(INKPLATE_1BIT);
 WiFiMulti wifiMulti;
 Timezone timezone;
+
+bool quiet = false;
+RTC_DATA_ATTR bool recovery = false;
 
 _Noreturn void deep_sleep(int t) {
   Serial.println(String("Entering deep sleep for ") + t + " seconds. Bye!");
@@ -32,9 +36,13 @@ void show_error(void) {
   display.selectDisplayMode(INKPLATE_1BIT);
   Serial.println("Error!");
   display.drawImage(error_sign, display.width() / 2 + wifi_sign_w / 2 - error_sign_w, display.height() / 2 + wifi_sign_h / 2 - error_sign_h, error_sign_w, error_sign_h, false, true);
-  display.partialUpdate();
-  
-  deep_sleep(60);    
+  if (quiet) {
+    display.display();
+  } else {
+    display.partialUpdate();
+  }
+  recovery = true;
+  deep_sleep(60);
 }
 
 void setup() {
@@ -44,6 +52,10 @@ void setup() {
   display.begin();
   display.clearDisplay();
   display.setRotation(3);
+
+  if (rtc_get_reset_reason(0) == DEEPSLEEP_RESET && !recovery) {
+    quiet = true;
+  }
 
   double voltage = display.readBattery();
   Serial.println("Voltage: " + String(voltage) + "V");
@@ -60,8 +72,10 @@ void setup() {
   for (int i=0; i<sizeof(aps)/sizeof(aps[0]); i++) {
     wifiMulti.addAP(aps[i], psks[i]);
   }
-  display.display();
-  
+  if (!quiet) {
+    display.display();
+  }
+
   int t = 0;
   while (wifiMulti.run() != WL_CONNECTED) {
     delay(1000);
@@ -70,12 +84,14 @@ void setup() {
       show_error();
     Serial.print(".");
   }
-  
+
   Serial.println();
   Serial.println("Connected to \"" + WiFi.SSID() + "\". Requesting " HTTP_URL "...");
   display.drawImage(wifi_sign, display.width() / 2 - wifi_sign_w / 2, display.height() / 2 - wifi_sign_h / 2, wifi_sign_w, wifi_sign_h, false, true);
-  display.partialUpdate();
-  
+  if (!quiet) {
+    display.partialUpdate();
+  }
+
   HTTPClient http;
   http.begin(HTTP_URL);
   http.addHeader("X-kartka-voltage", String(voltage));
@@ -120,6 +136,7 @@ void setup() {
       waitForSync(16);
       Serial.println(timezone.dateTime());
 
+      recovery = false;
       deep_sleep((23 - timezone.hour()) * 60 * 60 + (59 - timezone.minute()) * 60 + (60 - timezone.second()));
     }
   }
