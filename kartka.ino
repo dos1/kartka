@@ -10,6 +10,7 @@
 #include "wifi_sign.h"
 #include "wifi_connecting.h"
 #include "error_sign.h"
+#include "battery_sign.h"
 
 #include "config.h"
 
@@ -21,14 +22,20 @@ bool quiet = false;
 RTC_DATA_ATTR bool recovery = false;
 
 _Noreturn void deep_sleep(int t) {
-  Serial.println(String("Entering deep sleep for ") + t + " seconds. Bye!");
-  
+  if (t < 0) {
+    Serial.println("Entering infinite deep sleep. Bye!");
+  } else {
+    Serial.println(String("Entering deep sleep for ") + t + " seconds. Bye!");
+  }
+
   WiFi.disconnect(true, true);
   WiFi.mode(WIFI_OFF);
   display.einkOff();
 
   rtc_gpio_isolate(GPIO_NUM_12);
-  esp_sleep_enable_timer_wakeup(t * 1000000ULL);
+  if (t >= 0) {
+    esp_sleep_enable_timer_wakeup(t * 1000000ULL);
+  }
   esp_deep_sleep_start();
 }
 
@@ -65,7 +72,14 @@ void setup() {
   Serial.println("Voltage: " + String(voltage) + "V");
   int8_t temperature = display.readTemperature();
   Serial.println("Temperature: " + String(temperature) + "°C");
-    
+
+  if (voltage < 3.5) {
+    Serial.println("Low battery! Abort!");
+    display.drawImage(battery_sign, display.width() / 2 - battery_sign_w / 2, display.height() / 2 - battery_sign_h / 2, battery_sign_w, battery_sign_h);
+    display.display();
+    deep_sleep(-1);
+  }
+
   display.drawImage(wifi_connecting, display.width() / 2 - wifi_connecting_w / 2, display.height() / 2 - wifi_connecting_h / 2, wifi_connecting_w, wifi_connecting_h);
 
   Serial.print("Connecting to WiFi...");
