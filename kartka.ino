@@ -47,6 +47,7 @@ _Noreturn void deep_sleep(int t) {
   } else {
     Serial.println(String("Entering deep sleep for ") + t + " seconds. Bye!");
   }
+  Serial.println();
 
   WiFi.disconnect(true, true);
   WiFi.mode(WIFI_OFF);
@@ -101,6 +102,7 @@ void setup() {
   Serial.println("Voltage: " + String(voltage) + "V");
   int8_t temperature = display.readTemperature();
   Serial.println("Temperature: " + String(temperature) + "°C");
+  Serial.println();
 
   if (voltage < 3.5) {
     Serial.println("Low battery! Abort!");
@@ -184,8 +186,8 @@ void setup() {
       }
       
       uint8_t *d = data;
-      Serial.println("Displaying...");
-            
+      Serial.println("Decoding...");
+
       int width, height, max;
       d = pgm_parse(data, len, &width, &height, &max);
       if (!d) {
@@ -193,12 +195,16 @@ void setup() {
         free(data);
         show_error();
       }
-      Serial.println(String("Got a ") + width + "x" + height + " image, max: " + max);
+      Serial.println(String("PGM image: ") + width + "x" + height + " (" + max + ")");
+
+      Serial.println("Drawing...");
 
       display.selectDisplayMode(INKPLATE_3BIT);
       for (int i = 0; i < width * height; i++) {
         display.drawPixel(i % width, i / width, pgm_pixel_at(d, i, pgm_depth(max)) / (max / (double)7));
       }
+
+      Serial.println("Displaying...");
       display.display();
       
       http.end();
