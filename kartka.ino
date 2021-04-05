@@ -113,9 +113,15 @@ void setup() {
   }
 
   Serial.println("Waiting for timezone " TIMEZONE "...");
-  timezone.setLocation(TIMEZONE);
+  if (!timezone.setLocation(TIMEZONE)) {
+    Serial.println("Could not retrieve timezone information!");
+    show_error();
+  }
   Serial.println("Waiting for NTP...");
-  waitForSync(16);
+  if (!waitForSync(30)) {
+    Serial.println("Could not retrieve current time!");
+    show_error();
+  }
   Serial.println(timezone.dateTime());
 
   int sleep_time = get_sleep_time();
