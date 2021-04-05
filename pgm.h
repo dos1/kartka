@@ -1,3 +1,7 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 int pgm_depth(int max);
 uint16_t pgm_pixel_at(uint8_t* buf, int pos, int depth);
 

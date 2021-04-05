@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2021 Sebastian Krzyszkowiak <dos@dosowisko.net>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 #include <Inkplate.h>
 #include <driver/rtc_io.h>
 #include <rom/rtc.h>
@@ -61,6 +80,15 @@ void setup() {
   Serial.begin(115200);
   Serial.println();
   Serial.println("kartka (" __DATE__ " " __TIME__ ")");
+  Serial.println("Copyright (C) 2021 Sebastian Krzyszkowiak <dos@dosowisko.net>");
+  Serial.println("This program comes with ABSOLUTELY NO WARRANTY.");
+  Serial.println("This is free software, and you are welcome to redistribute it and/or modify");
+  Serial.println("it under the terms of the GNU General Public License as published by");
+  Serial.println("the Free Software Foundation, either version 3 of the License, or");
+  Serial.println("(at your option) any later version.");
+  Serial.println("https://gitlab.com/dos1/kartka");
+  Serial.println();
+
   display.begin();
   display.clearDisplay();
   display.setRotation(3);
