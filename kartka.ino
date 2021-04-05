@@ -35,7 +35,7 @@ _Noreturn void deep_sleep(int t) {
 void show_error(void) {
   display.selectDisplayMode(INKPLATE_1BIT);
   Serial.println("Error!");
-  display.drawImage(error_sign, display.width() / 2 + wifi_sign_w / 2 - error_sign_w, display.height() / 2 + wifi_sign_h / 2 - error_sign_h, error_sign_w, error_sign_h, false, true);
+  display.drawImage(error_sign, display.width() / 2 + wifi_sign_w / 2 - error_sign_w, display.height() / 2 + wifi_sign_h / 2 - error_sign_h, error_sign_w, error_sign_h);
   if (quiet) {
     display.display();
   } else {
@@ -66,7 +66,7 @@ void setup() {
   int8_t temperature = display.readTemperature();
   Serial.println("Temperature: " + String(temperature) + "°C");
     
-  display.drawImage(wifi_connecting, display.width() / 2 - wifi_connecting_w / 2, display.height() / 2 - wifi_connecting_h / 2, wifi_connecting_w, wifi_connecting_h, false, true);
+  display.drawImage(wifi_connecting, display.width() / 2 - wifi_connecting_w / 2, display.height() / 2 - wifi_connecting_h / 2, wifi_connecting_w, wifi_connecting_h);
 
   Serial.print("Connecting to WiFi...");
   WiFi.mode(WIFI_MODE_STA);
@@ -91,7 +91,7 @@ void setup() {
 
   Serial.println();
   Serial.println("Connected to \"" + WiFi.SSID() + "\"");
-  display.drawImage(wifi_sign, display.width() / 2 - wifi_sign_w / 2, display.height() / 2 - wifi_sign_h / 2, wifi_sign_w, wifi_sign_h, false, true);
+  display.drawImage(wifi_sign, display.width() / 2 - wifi_sign_w / 2, display.height() / 2 - wifi_sign_h / 2, wifi_sign_w, wifi_sign_h);
   if (!quiet) {
     display.partialUpdate();
   }
