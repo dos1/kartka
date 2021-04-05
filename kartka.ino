@@ -45,6 +45,10 @@ void show_error(void) {
   deep_sleep(60);
 }
 
+int get_sleep_time(void) {
+  return (24 - timezone.hour()) * 60 * 60 + (00 - timezone.minute()) * 60 + (00 - timezone.second());
+}
+
 void setup() {
   Serial.begin(115200);
   Serial.println();
@@ -64,7 +68,7 @@ void setup() {
     
   display.drawImage(wifi_connecting, display.width() / 2 - wifi_connecting_w / 2, display.height() / 2 - wifi_connecting_h / 2, wifi_connecting_w, wifi_connecting_h, false, true);
 
-  Serial.print("Connecting to WiFi..");
+  Serial.print("Connecting to WiFi...");
   WiFi.mode(WIFI_MODE_STA);
   WiFi.setHostname(WIFI_HOSTNAME);
   const char* aps[] = {WIFI_AP};
@@ -78,19 +82,39 @@ void setup() {
 
   int t = 0;
   while (wifiMulti.run() != WL_CONNECTED) {
-    delay(1000);
     t++;
-    if (t > 60)
+    if (t > 30)
       show_error();
     Serial.print(".");
+    delay(1000);
   }
 
   Serial.println();
-  Serial.println("Connected to \"" + WiFi.SSID() + "\". Requesting " HTTP_URL "...");
+  Serial.println("Connected to \"" + WiFi.SSID() + "\"");
   display.drawImage(wifi_sign, display.width() / 2 - wifi_sign_w / 2, display.height() / 2 - wifi_sign_h / 2, wifi_sign_w, wifi_sign_h, false, true);
   if (!quiet) {
     display.partialUpdate();
   }
+
+  Serial.println("Waiting for timezone " TIMEZONE "...");
+  timezone.setLocation(TIMEZONE);
+  Serial.println("Waiting for NTP...");
+  waitForSync(16);
+  Serial.println(timezone.dateTime());
+
+  int sleep_time = get_sleep_time();
+  if (quiet && timezone.hour() != 0) {
+    Serial.println("Woke up too early!");
+    if (sleep_time < 15) {
+      Serial.println(String("Sleeping for ") + (sleep_time + 1) + " seconds.");
+      delay((sleep_time + 1) * 1000);
+      sleep_time = get_sleep_time();
+    } else {
+      deep_sleep(sleep_time);
+    }
+  }
+
+  Serial.println("Requesting \"" HTTP_URL "\"...");
 
   HTTPClient http;
   http.begin(HTTP_URL);
@@ -129,15 +153,9 @@ void setup() {
       
       http.end();
       free(data);
-      
-      Serial.println("Waiting for timezone " TIMEZONE "...");
-      timezone.setLocation(TIMEZONE);
-      Serial.println("Waiting for NTP...");
-      waitForSync(16);
-      Serial.println(timezone.dateTime());
 
       recovery = false;
-      deep_sleep((23 - timezone.hour()) * 60 * 60 + (59 - timezone.minute()) * 60 + (60 - timezone.second()));
+      deep_sleep(sleep_time);
     }
   }
 
