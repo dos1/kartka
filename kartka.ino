@@ -1,5 +1,6 @@
-#include "Inkplate.h"
-#include "driver/rtc_io.h"
+#include <Inkplate.h>
+#include <driver/rtc_io.h>
+#include <WiFiMulti.h>
 #include <ezTime.h>
 
 #include "pgm.h"
@@ -11,8 +12,9 @@
 
 #include "config.h"
 
-Timezone timezone;
 Inkplate display(INKPLATE_1BIT);
+WiFiMulti wifiMulti;
+Timezone timezone;
 
 _Noreturn void deep_sleep(int t) {
   Serial.println(String("Entering deep sleep for ") + t + " seconds. Bye!");
@@ -50,14 +52,18 @@ void setup() {
     
   display.drawImage(wifi_connecting, display.width() / 2 - wifi_connecting_w / 2, display.height() / 2 - wifi_connecting_h / 2, wifi_connecting_w, wifi_connecting_h, false, true);
 
-  Serial.print("Connecting to \"" WIFI_AP "\"..");
+  Serial.print("Connecting to WiFi..");
   WiFi.mode(WIFI_MODE_STA);
   WiFi.setHostname(WIFI_HOSTNAME);
-  WiFi.begin(WIFI_AP, WIFI_PSK);
+  const char* aps[] = {WIFI_AP};
+  const char* psks[] = {WIFI_PSK};
+  for (int i=0; i<sizeof(aps)/sizeof(aps[0]); i++) {
+    wifiMulti.addAP(aps[i], psks[i]);
+  }
   display.display();
   
   int t = 0;
-  while (WiFi.status() != WL_CONNECTED) {
+  while (wifiMulti.run() != WL_CONNECTED) {
     delay(1000);
     t++;
     if (t > 60)
@@ -66,7 +72,7 @@ void setup() {
   }
   
   Serial.println();
-  Serial.println("Connected. Requesting " HTTP_URL "...");
+  Serial.println("Connected to \"" + WiFi.SSID() + "\". Requesting " HTTP_URL "...");
   display.drawImage(wifi_sign, display.width() / 2 - wifi_sign_w / 2, display.height() / 2 - wifi_sign_h / 2, wifi_sign_w, wifi_sign_h, false, true);
   display.partialUpdate();
   
