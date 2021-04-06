@@ -4,7 +4,7 @@
 
 ## Dependencies
 
-**kartka** depends on InkplateLibrary and ezTime:
+**kartka** depends on [InkplateLibrary](https://www.arduino.cc/reference/en/libraries/inkplatelibrary/) and [ezTime](https://www.arduino.cc/reference/en/libraries/eztime/):
 
 ```
 arduino-cli lib --additional-urls https://github.com/e-radionicacom/Croduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Croduino_Boards_index.json install InkplateLibrary ezTime
