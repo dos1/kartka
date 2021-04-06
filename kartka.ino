@@ -92,7 +92,7 @@ void setup() {
 
   display.begin();
   display.clearDisplay();
-  display.setRotation(3);
+  display.setRotation(ROTATION);
 
   if (rtc_get_reset_reason(0) == DEEPSLEEP_RESET && !recovery) {
     quiet = true;

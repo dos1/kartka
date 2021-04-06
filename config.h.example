@@ -4,3 +4,4 @@
 #define WIFI_HOSTNAME "dhcp-hostname"
 #define HTTP_URL "https://example.com/kartka.pgm"
 #define TIMEZONE "Europe/Berlin"
+#define ROTATION 3
