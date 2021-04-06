@@ -203,7 +203,7 @@ void setup() {
 
       display.selectDisplayMode(INKPLATE_3BIT);
       for (int i = 0; i < width * height; i++) {
-        display.drawPixel(i % width, i / width, pgm_pixel_at(d, i, pgm_depth(max)) * 7 / max);
+        display.drawPixel((display.width() - width) / 2 + (i % width), (display.height() - height) / 2 + (i / width), pgm_pixel_at(d, i, pgm_depth(max)) * 7 / max);
       }
 
       Serial.println("Displaying...");
