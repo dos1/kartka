@@ -40,6 +40,7 @@ Timezone timezone;
 
 bool quiet = false;
 RTC_DATA_ATTR bool recovery = false;
+RTC_DATA_ATTR int recovery_attempts = 0;
 
 _Noreturn void deep_sleep(int t) {
   if (t < 0) {
@@ -70,7 +71,7 @@ void show_error(void) {
     display.partialUpdate();
   }
   recovery = true;
-  deep_sleep(60);
+  deep_sleep(60 * pow(2, min(recovery_attempts++, 9)));
 }
 
 int get_sleep_time(void) {
@@ -213,6 +214,7 @@ void setup() {
       free(data);
 
       recovery = false;
+      recovery_attempts = 0;
       deep_sleep(sleep_time);
     }
   }
