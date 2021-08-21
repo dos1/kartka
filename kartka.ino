@@ -107,7 +107,7 @@ void setup() {
   Serial.println("Temperature: " + String(temperature) + "°C");
   Serial.println();
 
-  if (voltage < 3.5) {
+  if (voltage < LOW_BATTERY) {
     Serial.println("Low battery! Abort!");
     display.drawImage(battery_sign, display.width() / 2 - battery_sign_w / 2, display.height() / 2 - battery_sign_h / 2, battery_sign_w, battery_sign_h);
     display.display();

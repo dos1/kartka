@@ -5,3 +5,4 @@
 #define HTTP_URL "https://example.com/kartka.pgm"
 #define TIMEZONE "Europe/Berlin"
 #define ROTATION 3
+#define LOW_BATTERY 3.5
