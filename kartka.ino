@@ -151,7 +151,7 @@ void setup() {
     show_error();
   }
   Serial.println("Waiting for NTP...");
-  if (!waitForSync(30)) {
+  if (!waitForSync(10)) {
     Serial.println("Could not retrieve current time!");
     show_error();
   }
