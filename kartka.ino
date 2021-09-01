@@ -101,6 +101,11 @@ void setup() {
     Serial.println();
   }
 
+  if (recovery) {
+    Serial.println("Starting in recovery mode: " + String(recovery_attempts));
+    Serial.println();
+  }
+
   double voltage = display.readBattery();
   Serial.println("Voltage: " + String(voltage) + "V");
   int8_t temperature = display.readTemperature();
