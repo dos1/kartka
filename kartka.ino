@@ -39,8 +39,7 @@ WiFiMulti wifiMulti;
 Timezone timezone;
 
 bool quiet = false;
-RTC_DATA_ATTR bool recovery = false;
-RTC_DATA_ATTR int recovery_attempts = 0;
+RTC_DATA_ATTR int recovery = 0;
 
 _Noreturn void deep_sleep(int t) {
   if (t < 0) {
@@ -70,8 +69,7 @@ void show_error(void) {
   } else {
     display.partialUpdate();
   }
-  recovery = true;
-  deep_sleep(60 * pow(2, min(recovery_attempts++, 9)));
+  deep_sleep(60 * pow(2, min(recovery++, 9)));
 }
 
 int get_sleep_time(void) {
@@ -102,7 +100,7 @@ void setup() {
   }
 
   if (recovery) {
-    Serial.println("Starting in recovery mode: " + String(recovery_attempts));
+    Serial.println("Starting in recovery mode: " + String(recovery));
     Serial.println();
   }
 
@@ -180,12 +178,8 @@ void setup() {
   http.begin(HTTP_URL);
   http.addHeader("X-kartka-voltage", String(voltage));
   http.addHeader("X-kartka-temperature", String(temperature));
-  if (quiet) {
-    http.addHeader("X-kartka-quiet", "true");
-  }
-  if (recovery) {
-    http.addHeader("X-kartka-recovery", String(recovery_attempts));
-  }
+  http.addHeader("X-kartka-recovery", String(recovery));
+  http.addHeader("X-kartka-quiet", quiet ? "true" : "false");
 
   int httpCode = http.GET();
   if (httpCode == 200) {
@@ -224,8 +218,7 @@ void setup() {
       http.end();
       free(data);
 
-      recovery = false;
-      recovery_attempts = 0;
+      recovery = 0;
       deep_sleep(sleep_time);
     }
   }
