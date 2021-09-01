@@ -180,6 +180,12 @@ void setup() {
   http.begin(HTTP_URL);
   http.addHeader("X-kartka-voltage", String(voltage));
   http.addHeader("X-kartka-temperature", String(temperature));
+  if (quiet) {
+    http.addHeader("X-kartka-quiet", "true");
+  }
+  if (recovery) {
+    http.addHeader("X-kartka-recovery", String(recovery_attempts));
+  }
 
   int httpCode = http.GET();
   if (httpCode == 200) {
