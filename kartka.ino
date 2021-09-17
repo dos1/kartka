@@ -153,7 +153,7 @@ void setup() {
   }
 
   Serial.println("Waiting for timezone " CONFIG_TIMEZONE "...");
-  if (!timezone.setLocation(CONFIG_TIMEZONE)) {
+  if (!timezone.setCache(0) && !timezone.setLocation(CONFIG_TIMEZONE)) {
     Serial.println("Could not retrieve timezone information!");
     show_error();
   }
