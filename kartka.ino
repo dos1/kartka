@@ -34,7 +34,7 @@
 
 #include "config.h"
 
-#ifndef WIFI_SSID
+#ifndef CONFIG_WIFI_SSID
 #error "You must provide a config.h file with configuration - see config.h.example"
 #endif
 
@@ -95,7 +95,7 @@ void setup() {
 
   display.begin();
   display.clearDisplay();
-  display.setRotation(ROTATION);
+  display.setRotation(CONFIG_ROTATION);
 
   if (rtc_get_reset_reason(0) == DEEPSLEEP_RESET && !recovery) {
     quiet = true;
@@ -114,7 +114,7 @@ void setup() {
   Serial.println("Temperature: " + String(temperature) + "°C");
   Serial.println();
 
-  if (voltage < LOW_BATTERY) {
+  if (voltage < CONFIG_LOW_BATTERY) {
     Serial.println("Low battery! Abort!");
     display.drawImage(battery_sign, display.width() / 2 - battery_sign_w / 2, display.height() / 2 - battery_sign_h / 2, battery_sign_w, battery_sign_h);
     display.display();
@@ -125,9 +125,9 @@ void setup() {
 
   Serial.print("Connecting to WiFi...");
   WiFi.mode(WIFI_MODE_STA);
-  WiFi.setHostname(WIFI_HOSTNAME);
-  const char* aps[] = {WIFI_SSID};
-  const char* psks[] = {WIFI_PSK};
+  WiFi.setHostname(CONFIG_WIFI_HOSTNAME);
+  const char* aps[] = {CONFIG_WIFI_SSID};
+  const char* psks[] = {CONFIG_WIFI_PSK};
   static_assert(sizeof(aps) == sizeof(psks), "Invalid access point configuration");
   for (int i=0; i<sizeof(aps)/sizeof(aps[0]); i++) {
     wifiMulti.addAP(aps[i], psks[i]);
@@ -152,8 +152,8 @@ void setup() {
     display.partialUpdate();
   }
 
-  Serial.println("Waiting for timezone " TIMEZONE "...");
-  if (!timezone.setLocation(TIMEZONE)) {
+  Serial.println("Waiting for timezone " CONFIG_TIMEZONE "...");
+  if (!timezone.setLocation(CONFIG_TIMEZONE)) {
     Serial.println("Could not retrieve timezone information!");
     show_error();
   }
@@ -176,10 +176,10 @@ void setup() {
     }
   }
 
-  Serial.println("Requesting \"" HTTP_URL "\"...");
+  Serial.println("Requesting \"" CONFIG_HTTP_URL "\"...");
 
   HTTPClient http;
-  http.begin(HTTP_URL);
+  http.begin(CONFIG_HTTP_URL);
   http.addHeader("X-kartka-voltage", String(voltage));
   http.addHeader("X-kartka-temperature", String(temperature));
   http.addHeader("X-kartka-recovery", String(recovery));

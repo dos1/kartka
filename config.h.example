@@ -1,8 +1,8 @@
 // you can set arbitrary number of WiFi access points
-#define WIFI_SSID "MyWiFiAP", "MyWiFiAP2", "MyWiFiAP3"
-#define WIFI_PSK "WLANPASSWORD", "WLANPASSWORD2", "WLANPASSWORD3"
-#define WIFI_HOSTNAME "dhcp-hostname"
-#define HTTP_URL "https://example.com/kartka.pgm"
-#define TIMEZONE "Europe/Berlin"
-#define ROTATION 3
-#define LOW_BATTERY 3.5
+#define CONFIG_WIFI_SSID "MyWiFiAP", "MyWiFiAP2", "MyWiFiAP3"
+#define CONFIG_WIFI_PSK "WLANPASSWORD", "WLANPASSWORD2", "WLANPASSWORD3"
+#define CONFIG_WIFI_HOSTNAME "dhcp-hostname"
+#define CONFIG_HTTP_URL "https://example.com/kartka.pgm"
+#define CONFIG_TIMEZONE "Europe/Berlin"
+#define CONFIG_ROTATION 3
+#define CONFIG_LOW_BATTERY 3.5
