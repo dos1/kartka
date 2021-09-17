@@ -122,7 +122,7 @@ void setup() {
   Serial.print("Connecting to WiFi...");
   WiFi.mode(WIFI_MODE_STA);
   WiFi.setHostname(WIFI_HOSTNAME);
-  const char* aps[] = {WIFI_AP};
+  const char* aps[] = {WIFI_SSID};
   const char* psks[] = {WIFI_PSK};
   static_assert(sizeof(aps) == sizeof(psks), "Invalid access point configuration");
   for (int i=0; i<sizeof(aps)/sizeof(aps[0]); i++) {

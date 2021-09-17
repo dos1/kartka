@@ -1,5 +1,5 @@
 // you can set arbitrary number of WiFi access points
-#define WIFI_AP "MyWiFiAP", "MyWiFiAP2", "MyWiFiAP3"
+#define WIFI_SSID "MyWiFiAP", "MyWiFiAP2", "MyWiFiAP3"
 #define WIFI_PSK "WLANPASSWORD", "WLANPASSWORD2", "WLANPASSWORD3"
 #define WIFI_HOSTNAME "dhcp-hostname"
 #define HTTP_URL "https://example.com/kartka.pgm"
