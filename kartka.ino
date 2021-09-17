@@ -34,6 +34,10 @@
 
 #include "config.h"
 
+#ifndef WIFI_SSID
+#error "You must provide a config.h file with configuration - see config.h.example"
+#endif
+
 Inkplate display(INKPLATE_1BIT);
 WiFiMulti wifiMulti;
 Timezone timezone;
