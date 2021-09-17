@@ -123,6 +123,8 @@ void setup() {
 
   display.drawImage(wifi_connecting, display.width() / 2 - wifi_connecting_w / 2, display.height() / 2 - wifi_connecting_h / 2, wifi_connecting_w, wifi_connecting_h);
 
+  setServer(CONFIG_NTP_SERVER);
+
   Serial.print("Connecting to WiFi...");
   WiFi.mode(WIFI_MODE_STA);
   WiFi.setHostname(CONFIG_WIFI_HOSTNAME);

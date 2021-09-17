@@ -6,3 +6,4 @@
 #define CONFIG_TIMEZONE "Europe/Berlin"
 #define CONFIG_ROTATION 3
 #define CONFIG_LOW_BATTERY 3.5
+#define CONFIG_NTP_SERVER "pool.ntp.org"
