@@ -6,7 +6,7 @@ build:
     - arduino-cli core --additional-urls https://github.com/e-radionicacom/Croduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Croduino_Boards_index.json install Croduino_Boards:Inkplate
   script:
     - cp config.h.example config.h
-    - arduino-cli compile --fqbn Croduino_Boards:Inkplate:Inkplate6 kartka -e
+    - arduino-cli compile --fqbn Croduino_Boards:Inkplate:Inkplate6 . -e
   artifacts:
     paths:
       - build
