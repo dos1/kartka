@@ -185,43 +185,68 @@ void setup() {
     }
   }
 
-  Serial.println("Requesting \"" CONFIG_HTTP_URL "\"...");
+  Serial.print("Requesting \"" CONFIG_HTTP_URL "\"...");
 
   HTTPClient http;
   http.setUserAgent("kartka (" __DATE__ " " __TIME__ ")");
   http.setConnectTimeout(10000);
+
   http.begin(CONFIG_HTTP_URL);
   http.addHeader("X-kartka-voltage", String(voltage));
   http.addHeader("X-kartka-temperature", String(temperature));
   http.addHeader("X-kartka-recovery", String(recovery));
   http.addHeader("X-kartka-quiet", quiet ? "true" : "false");
+  http.addHeader("Accept-Encoding", "deflate");
+
+  const char* headerKeys[] = {"Content-Encoding", "X-kartka-length"};
+  http.collectHeaders(headerKeys, 2);
 
   int httpCode = http.GET();
   if (httpCode == 200) {
     int32_t len = http.getSize();
-    Serial.println(String("OK! (") + len + ") Downloading...");
-    
+    Serial.println(String(" OK! (") + len + ")");
+    Serial.print("Downloading...");
+
     if (len > 0) {
       uint8_t *data = download(http.getStreamPtr(), len);
       if (!data) {
-        Serial.println("Failed!");
+        Serial.println(" failed!");
         show_error();
       }
-      
-      uint8_t *d = data;
-      Serial.println("Decoding...");
+      Serial.println(" OK!");
+
+      bool compressed = http.header("Content-Encoding") == "deflate";
+
       http.end();
       WiFi.disconnect(true, true);
       WiFi.mode(WIFI_OFF);
 
+      if (compressed) {
+        Serial.print("Decompressing...");
+        size_t full_len = http.header("X-kartka-length").toInt();
+        uint8_t *decomp = deflate_decompress(data, len, &full_len);
+        free(data);
+        data = decomp;
+        len = full_len;
+
+        if (!data) {
+          Serial.println(" failed!");
+          show_error();
+        } else {
+          Serial.println(String(" OK! (") + len + ")");
+        }
+      }
+
+      Serial.print("Decoding...");
+
       int width, height, max;
-      d = pgm_parse(data, len, &width, &height, &max);
+      uint8_t *d = pgm_parse((uint8_t*)data, len, &width, &height, &max);
       if (!d) {
-        Serial.println("Couldn't decode PGM data!");
+        Serial.println(" Couldn't decode PGM data!");
         free(data);
         show_error();
       }
-      Serial.println(String("PGM image: ") + width + "x" + height + " (" + max + ")");
+      Serial.println(String(" PGM image: ") + width + "x" + height + " (" + max + ")");
 
       Serial.println("Drawing...");
 
@@ -241,7 +266,7 @@ void setup() {
     }
   }
 
-  Serial.println(String("HTTP error ") + httpCode + " (" + http.getSize() + ")");
+  Serial.println(String(" HTTP error ") + httpCode + " (" + http.getSize() + ")");
   http.end();
   show_error();
 }
