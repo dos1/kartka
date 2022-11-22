@@ -2,9 +2,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include <stdio.h>
-#include <stdint.h>
-
 static uint8_t* pgm_skip_whitespace(uint8_t *buf) {
   while (isspace(*buf)) {
     buf++;

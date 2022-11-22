@@ -2,6 +2,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include <WiFiClient.h>
+
 uint8_t* download(WiFiClient *s, int32_t len) {
   uint8_t *buffer = (uint8_t *)ps_malloc(len);
   uint8_t *buff = buffer;

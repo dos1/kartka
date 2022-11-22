@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Sebastian Krzyszkowiak <dos@dosowisko.net>
+ * Copyright (C) 2021-2022 Sebastian Krzyszkowiak <dos@dosowisko.net>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,8 @@
 #include <ezTime.h>
 #include <assert.h>
 
-#include "pgm.h"
-#include "download.h"
-
 #include "wifi_sign.h"
-#include "wifi_connecting.h"
+#include "wifi_connecting_sign.h"
 #include "error_sign.h"
 #include "battery_sign.h"
 
@@ -84,7 +81,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println();
   Serial.println("kartka (" __DATE__ " " __TIME__ ")");
-  Serial.println("Copyright (C) 2021 Sebastian Krzyszkowiak <dos@dosowisko.net>");
+  Serial.println("Copyright (C) 2021-2022 Sebastian Krzyszkowiak <dos@dosowisko.net>");
   Serial.println("This program comes with ABSOLUTELY NO WARRANTY.");
   Serial.println("This is free software, and you are welcome to redistribute it and/or modify");
   Serial.println("it under the terms of the GNU General Public License as published by");
