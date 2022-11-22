@@ -51,6 +51,10 @@ uint8_t* pgm_parse(uint8_t* buf, uint32_t size, int* width, int* height, int* ma
     Serial.println("Insufficient size to hold the magic");
     return NULL;
   }
+  if (!buf) {
+    Serial.println("Invalid buffer");
+    return NULL;
+  }
   if (strncmp((char*)buf, "P5", 2)) {
     Serial.println("Invalid magic");
     return NULL;
