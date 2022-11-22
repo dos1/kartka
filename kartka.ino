@@ -188,6 +188,7 @@ void setup() {
   Serial.println("Requesting \"" CONFIG_HTTP_URL "\"...");
 
   HTTPClient http;
+  http.setUserAgent("kartka (" __DATE__ " " __TIME__ ")");
   http.setConnectTimeout(10000);
   http.begin(CONFIG_HTTP_URL);
   http.addHeader("X-kartka-voltage", String(voltage));
