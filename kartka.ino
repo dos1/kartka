@@ -155,7 +155,7 @@ void setup() {
   }
 
   Serial.println();
-  Serial.println("Connected to \"" + WiFi.SSID() + "\"");
+  Serial.println("Connected to \"" + WiFi.SSID() + "\": " + WiFi.BSSIDstr());
   display.drawImage(wifi_sign, display.width() / 2 - wifi_sign_w / 2, display.height() / 2 - wifi_sign_h / 2, wifi_sign_w, wifi_sign_h);
   if (!quiet) {
     display.partialUpdate();
