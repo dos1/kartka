@@ -105,7 +105,7 @@ void setup() {
     Serial.println();
   }
 
-  double voltage = display.readBattery();
+  double voltage = display.readBattery() * CONFIG_BATTERY_CORRECTION_FACTOR;
   Serial.println("Voltage: " + String(voltage) + "V");
   int8_t temperature = display.readTemperature();
   Serial.println("Temperature: " + String(temperature) + "°C");
