@@ -131,6 +131,9 @@ void setup() {
   for (int i=0; i<sizeof(aps)/sizeof(aps[0]); i++) {
     wifiMulti.addAP(aps[i], psks[i]);
   }
+  if (!CONFIG_WIFI_DHCP) {
+    WiFi.config(IPAddress(CONFIG_WIFI_IP), IPAddress(CONFIG_WIFI_GATEWAY), IPAddress(CONFIG_WIFI_SUBNET), IPAddress(CONFIG_WIFI_DNS));
+  }
   if (!quiet) {
     display.display();
   }
