@@ -90,6 +90,9 @@ void setup() {
   Serial.println("https://gitlab.com/dos1/kartka");
   Serial.println();
 
+  WiFi.persistent(false);
+  WiFi.mode(WIFI_OFF);
+
   display.begin();
   display.clearDisplay();
   display.setRotation(CONFIG_ROTATION);
@@ -110,6 +113,10 @@ void setup() {
   int8_t temperature = display.readTemperature();
   Serial.println("Temperature: " + String(temperature) + "°C");
   Serial.println();
+
+  if (quiet) {
+    display.einkOff();
+  }
 
   if (voltage < CONFIG_LOW_BATTERY) {
     Serial.println("Low battery! Abort!");
@@ -139,9 +146,9 @@ void setup() {
   }
 
   int t = 0;
-  while (wifiMulti.run() != WL_CONNECTED) {
+  while (wifiMulti.run(10000) != WL_CONNECTED) {
     t++;
-    if (t > 30)
+    if (t > 10)
       show_error();
     Serial.print(".");
     delay(1000);
@@ -181,6 +188,7 @@ void setup() {
   Serial.println("Requesting \"" CONFIG_HTTP_URL "\"...");
 
   HTTPClient http;
+  http.setConnectTimeout(10000);
   http.begin(CONFIG_HTTP_URL);
   http.addHeader("X-kartka-voltage", String(voltage));
   http.addHeader("X-kartka-temperature", String(temperature));
@@ -201,6 +209,9 @@ void setup() {
       
       uint8_t *d = data;
       Serial.println("Decoding...");
+      http.end();
+      WiFi.disconnect(true, true);
+      WiFi.mode(WIFI_OFF);
 
       int width, height, max;
       d = pgm_parse(data, len, &width, &height, &max);
@@ -220,8 +231,8 @@ void setup() {
 
       Serial.println("Displaying...");
       display.display();
-      
-      http.end();
+
+      d = NULL;
       free(data);
 
       recovery = 0;
