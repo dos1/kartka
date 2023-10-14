@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Sebastian Krzyszkowiak <dos@dosowisko.net>
+ * Copyright (C) 2021-2023 Sebastian Krzyszkowiak <dos@dosowisko.net>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println();
   Serial.println("kartka (" __DATE__ " " __TIME__ ")");
-  Serial.println("Copyright (C) 2021-2022 Sebastian Krzyszkowiak <dos@dosowisko.net>");
+  Serial.println("Copyright (C) 2021-2023 Sebastian Krzyszkowiak <dos@dosowisko.net>");
   Serial.println("This program comes with ABSOLUTELY NO WARRANTY.");
   Serial.println("This is free software, and you are welcome to redistribute it and/or modify");
   Serial.println("it under the terms of the GNU General Public License as published by");
@@ -108,7 +108,7 @@ void setup() {
     Serial.println();
   }
 
-  double voltage = display.readBattery() * CONFIG_BATTERY_CORRECTION_FACTOR;
+  double voltage = display.readBattery();
   Serial.println("Voltage: " + String(voltage) + "V");
   int8_t temperature = display.readTemperature();
   Serial.println("Temperature: " + String(temperature) + "°C");
