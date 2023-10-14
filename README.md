@@ -7,8 +7,8 @@
 **kartka** depends on [InkplateLibrary](https://www.arduino.cc/reference/en/libraries/inkplatelibrary/) and [ezTime](https://www.arduino.cc/reference/en/libraries/eztime/):
 
 ```
-arduino-cli lib --additional-urls https://github.com/e-radionicacom/Croduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Croduino_Boards_index.json install InkplateLibrary ezTime
-arduino-cli core --additional-urls https://github.com/e-radionicacom/Croduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Croduino_Boards_index.json install Croduino_Boards:Inkplate
+arduino-cli lib --additional-urls https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json install InkplateLibrary ezTime
+arduino-cli core --additional-urls https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json install Inkplate_Boards:esp32
 ```
 
 ## Configuration
@@ -18,13 +18,13 @@ Before building the sketch, you need to copy `config.h.example` file into `confi
 ## Building
 
 ```
-arduino-cli compile --fqbn Croduino_Boards:Inkplate:Inkplate6 kartka
+arduino-cli compile --fqbn Inkplate_Boards:esp32:Inkplate6 kartka
 ```
 
 ## Installing
 
 ```
-arduino-cli upload -p /dev/ttyUSB0 --fqbn Croduino_Boards:Inkplate:Inkplate6 kartka
+arduino-cli upload -p /dev/ttyUSB0 --fqbn Inkplate_Boards:esp32:Inkplate6 kartka
 ```
 
 ## License
@@ -33,4 +33,4 @@ arduino-cli upload -p /dev/ttyUSB0 --fqbn Croduino_Boards:Inkplate:Inkplate6 kar
 
 The icons come from [Adwaita Icon Theme](https://gitlab.gnome.org/GNOME/adwaita-icon-theme) by [GNOME Project](https://www.gnome.org), licensed under the terms of either the [GNU LGPL v3](https://www.gnu.org/licenses/#LGPL) or [Creative Commons Attribution-Share Alike 3.0 United States License](https://creativecommons.org/licenses/by-sa/3.0/us/).
 
-Copyright (C) 2021 Sebastian Krzyszkowiak
+Copyright (C) 2021-2023 Sebastian Krzyszkowiak
