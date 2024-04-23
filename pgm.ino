@@ -25,14 +25,14 @@ static uint8_t* pgm_skip_comments(uint8_t *buf) {
   return pgm_skip_comments(buf);
 }
 
-int pgm_depth(int max) {
+inline int pgm_depth(int max) {
   if (max > 255) {
     return 2;
   }
   return 1;
 }
 
-uint16_t pgm_pixel_at(uint8_t* buf, int pos, int depth) {
+inline uint16_t pgm_pixel_at(uint8_t* buf, int pos, int depth) {
   if (depth == 2) {
     pos *= 2;
     return ((uint16_t)buf[pos] << 8) + buf[pos+1];

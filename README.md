@@ -33,4 +33,4 @@ arduino-cli upload -p /dev/ttyUSB0 --fqbn Inkplate_Boards:esp32:Inkplate6 kartka
 
 The icons come from [Adwaita Icon Theme](https://gitlab.gnome.org/GNOME/adwaita-icon-theme) by [GNOME Project](https://www.gnome.org), licensed under the terms of either the [GNU LGPL v3](https://www.gnu.org/licenses/#LGPL) or [Creative Commons Attribution-Share Alike 3.0 United States License](https://creativecommons.org/licenses/by-sa/3.0/us/).
 
-Copyright (C) 2021-2023 Sebastian Krzyszkowiak
+Copyright (C) 2021-2024 Sebastian Krzyszkowiak
