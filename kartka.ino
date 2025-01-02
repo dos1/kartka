@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2024 Sebastian Krzyszkowiak <dos@dosowisko.net>
+ * Copyright (C) 2021-2025 Sebastian Krzyszkowiak <dos@dosowisko.net>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println();
   Serial.println("kartka (" __DATE__ " " __TIME__ ")");
-  Serial.println("Copyright (C) 2021-2024 Sebastian Krzyszkowiak <dos@dosowisko.net>");
+  Serial.println("Copyright (C) 2021-2025 Sebastian Krzyszkowiak <dos@dosowisko.net>");
   Serial.println("This program comes with ABSOLUTELY NO WARRANTY.");
   Serial.println("This is free software, and you are welcome to redistribute it and/or modify");
   Serial.println("it under the terms of the GNU General Public License as published by");
@@ -185,7 +185,7 @@ void setup() {
     }
   }
 
-  Serial.print("Requesting \"" CONFIG_HTTP_URL "\"...");
+  Serial.print("Downloading \"" CONFIG_HTTP_URL "\"...");
 
   HTTPClient http;
   http.setUserAgent("kartka (" __DATE__ " " __TIME__ ")");
@@ -206,16 +206,13 @@ void setup() {
     String payload = http.getString();
     int32_t len = http.getSize();
 
-    Serial.println(String(" OK! (") + len + ")");
-    Serial.print("Downloading...");
-
     if (len > 0) {
       uint8_t *data = (uint8_t*)payload.c_str();
       if (!data) {
         Serial.println(" failed!");
         show_error();
       }
-      Serial.println(" OK!");
+      Serial.println(String(" OK! (") + len + ")");
 
       bool compressed = http.header("Content-Encoding") == "deflate";
 
@@ -226,8 +223,17 @@ void setup() {
       if (compressed) {
         Serial.print("Decompressing...");
         size_t full_len = http.header("X-Uncompressed-Content-Length").toInt();
-        uint8_t *decomp = deflate_decompress(data, len, &full_len);
-        data = decomp;
+
+        // copy the buffer to internal memory because of ESP32 PSRAM cache errata
+        uint8_t *copy = (uint8_t*)heap_caps_malloc(len, MALLOC_CAP_INTERNAL);
+        if (copy) {
+          memcpy(copy, data, len);
+          data = deflate_decompress(copy, len, &full_len);
+          free(copy);
+        } else {
+          Serial.print(" (in PSRAM)");
+          data = deflate_decompress(data, len, &full_len);
+        }
         len = full_len;
 
         if (!data) {
