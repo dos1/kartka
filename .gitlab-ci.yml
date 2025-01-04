@@ -2,7 +2,7 @@ build:
   image: solarbotics/arduino-cli:0.26.0-python3.8
   before_script:
     - pip install pyserial
-    - arduino-cli lib --additional-urls https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json install InkplateLibrary ezTime
+    - arduino-cli lib --additional-urls https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json install InkplateLibrary ezTime zlib_turbo
     - arduino-cli core --additional-urls https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json install Inkplate_Boards:esp32
   script:
     - cp config.h.example config.h
