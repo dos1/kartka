@@ -22,6 +22,7 @@
 #include <rom/rtc.h>
 #include <WiFiMulti.h>
 #include <ezTime.h>
+#include <zlib_turbo.h>
 #include <assert.h>
 
 #include "wifi_sign.h"
@@ -38,6 +39,7 @@
 Inkplate display(INKPLATE_1BIT);
 WiFiMulti wifiMulti;
 Timezone timezone;
+zlib_turbo zt;
 
 bool quiet = false;
 RTC_DATA_ATTR int recovery = 0;
@@ -196,9 +198,9 @@ void setup() {
   http.addHeader("X-kartka-temperature", String(temperature));
   http.addHeader("X-kartka-recovery", String(recovery));
   http.addHeader("X-kartka-quiet", quiet ? "true" : "false");
-  http.addHeader("Accept-Encoding", "deflate");
+  http.addHeader("Accept-Encoding", "gzip");
 
-  const char* headerKeys[] = {"Content-Encoding", "X-Uncompressed-Content-Length"};
+  const char* headerKeys[] = {"Content-Encoding"};
   http.collectHeaders(headerKeys, sizeof(headerKeys) / sizeof(headerKeys[0]));
 
   int httpCode = http.GET();
@@ -214,7 +216,7 @@ void setup() {
       }
       Serial.println(String(" OK! (") + len + ")");
 
-      bool compressed = http.header("Content-Encoding") == "deflate";
+      bool compressed = http.header("Content-Encoding") == "gzip";
 
       http.end();
       WiFi.disconnect(true, true);
@@ -222,25 +224,23 @@ void setup() {
 
       if (compressed) {
         Serial.print("Decompressing...");
-        size_t full_len = http.header("X-Uncompressed-Content-Length").toInt();
+        size_t full_len = zt.gzip_info(data, len);
 
-        // copy the buffer to internal memory because of ESP32 PSRAM cache errata
-        uint8_t *copy = (uint8_t*)heap_caps_malloc(len, MALLOC_CAP_INTERNAL);
-        if (copy) {
-          memcpy(copy, data, len);
-          data = deflate_decompress(copy, len, &full_len);
-          free(copy);
-        } else {
-          Serial.print(" (in PSRAM)");
-          data = deflate_decompress(data, len, &full_len);
-        }
-        len = full_len;
-
-        if (!data) {
-          Serial.println(" failed!");
+        if (!full_len) {
+          Serial.println(" invalid gzip!");
           show_error();
-        } else {
+        }
+
+        uint8_t *buf = (uint8_t*)malloc(full_len+4);
+        int status = zt.gunzip(data, len, buf);
+        if (status == ZT_SUCCESS) {
+          data = buf;
+          len = full_len;
           Serial.println(String(" OK! (") + len + ")");
+        } else {
+          Serial.println(" failed!");
+          free(data);
+          show_error();
         }
       }
 
