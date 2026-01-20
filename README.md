@@ -4,10 +4,10 @@
 
 ## Dependencies
 
-**kartka** depends on [InkplateLibrary](https://www.arduino.cc/reference/en/libraries/inkplatelibrary/) and [ezTime](https://www.arduino.cc/reference/en/libraries/eztime/):
+**kartka** depends on [InkplateLibrary](https://www.arduino.cc/reference/en/libraries/inkplatelibrary/), [ezTime](https://www.arduino.cc/reference/en/libraries/eztime/) and [zlib_turbo](https://docs.arduino.cc/libraries/zlib_turbo/):
 
 ```
-arduino-cli lib --additional-urls https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json install InkplateLibrary ezTime
+arduino-cli lib --additional-urls https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json install InkplateLibrary ezTime zlib_turbo
 arduino-cli core --additional-urls https://github.com/SolderedElectronics/Dasduino-Board-Definitions-for-Arduino-IDE/raw/master/package_Dasduino_Boards_index.json install Inkplate_Boards:esp32
 ```
 
